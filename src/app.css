@@ -6,14 +6,28 @@ html {
 
 body {
 	background-image: url('./lib/assets/bg.webp');
-	background-size: auto;
+	background-size: cover;
+	/* keeps it covering horizontally */
 	background-repeat: no-repeat;
 	background-attachment: fixed;
-	/* optional, makes it “stick” */
-	background-position: center center;
-	/* start at top */
+	background-position: center top;
+	/* changed from center center */
+	min-height: 100vh;
+
+	/* THIS IS THE MAGIC LINE */
+	background-color: #000;
+	/* or any color that matches the bottom of your image */
 }
 
+/* Extra insurance so it never shows white even on very long pages */
+html,
+body {
+	height: 100%;
+	margin: 0;
+	padding: 0;
+}
+
+/* If your image has a dark/bottom color, just match it here instead of black */
 
 .project-panel {
 	transition: transform 0.25s ease, box-shadow 0.25s ease;

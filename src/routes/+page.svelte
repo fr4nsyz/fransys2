@@ -81,7 +81,7 @@
 	// Track scroll
 	function handleScroll() {
 		scrollY = window.scrollY;
-		document.body.style.backgroundPosition = `center ${scrollY * -0.1}px`;
+		document.body.style.backgroundPosition = `center ${scrollY * -0.05}px`;
 	}
 </script>
 
@@ -191,9 +191,10 @@
 									class="text-gray-200 block -translate-y-2 hover:text-cyan-400 animate-pulse transition-all duration-1000 drop-shadow-[0_0_5px_rgba(0,255,255,0.5)] hover:drop-shadow-[0_0_10px_rgba(0,255,255,0.9)] cursor-pointer mt-4"
 								/>
 							</a>
+
 							<a
 								href={project.link}
-								class="text-gray-200 hover:text-cyan-400"
+								class="text-gray-200 hover:text-cyan-400 truncate max-w-full"
 							>
 								{project.link.slice(19)}
 							</a>
