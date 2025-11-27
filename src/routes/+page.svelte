@@ -7,6 +7,13 @@
 
 	const projects = [
 		{
+			name: "Server Agent Threat Detection (SATD)",
+			description:
+				"A distributed threat detection system with Go agents, a central server, and a Node.js dashboard.",
+			link: "https://github.com/Francois-Coleongco/SATD",
+			demo: "/assets/SATD.mp4",
+		},
+		{
 			name: "Multithreaded Encrypted File Server/Client",
 			description: "A terminal-based file storage server and client",
 			link: "https://github.com/Francois-Coleongco/MEFSC",
@@ -38,11 +45,6 @@
 			link: "https://github.com/Francois-Coleongco/DNS_Tunneling",
 			demo: "/assets/DNS_Tunneling.mp4",
 		},
-		// {
-		// 	name: "Distributed Threat Detection System",
-		// 	description: "A distributed threat detection framework",
-		// 	link: "https://github.com/Francois-Coleongco/SATD",
-		// },
 		{
 			name: "Network Encryption Interface",
 			description: "A C++ systems programming & encryption interface",
@@ -171,7 +173,7 @@
 							</p>
 							{#if project.demo}
 								<div
-									class="video-wrapper w-full aspect-video overflow-hidden rounded-md border border-[#222244] shadow-lg"
+									class="w-full aspect-video overflow-hidden rounded-md border border-[#222244] shadow-lg"
 								>
 									<video
 										bind:this={videos[i]}
@@ -179,7 +181,8 @@
 										autoplay
 										muted
 										loop
-										class="w-full h-full object-cover rounded-md"
+										playsinline
+										class="w-full h-full object-contain rounded-md"
 									/>
 								</div>
 							{/if}
