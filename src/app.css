@@ -1,7 +1,7 @@
 @import "tailwindcss";
 
 html {
-	scroll-behavior: smooth;
+	/* scroll-behavior: smooth; */
 }
 
 html,
@@ -11,9 +11,10 @@ body {
 }
 
 body {
-	background-image: url("./lib/assets/bg.png");
+	/* background-image: url("./lib/assets/bg.png"); */
 	background-repeat: repeat-y;
 	background-size: 500% 500%;
+	background-color: rgba(0, 0, 0, 1);
 }
 
 body::before {
