@@ -60,9 +60,6 @@
 
 		const ctx = canvas.getContext("2d");
 
-		canvas.width = window.innerWidth;
-		canvas.height = window.innerHeight;
-
 		const stars = [];
 		const STAR_COUNT = 80;
 
@@ -84,6 +81,8 @@
 		}
 
 		function draw() {
+			canvas.width = window.innerWidth;
+			canvas.height = window.innerHeight;
 			const t = performance.now() * 0.001;
 
 			const hue1 = 180 + Math.sin(t) * 40;
