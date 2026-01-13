@@ -1,63 +1,91 @@
 <script>
-	import { fade } from "svelte/transition";
 	import "../app.css";
-
 	import Github from "@iconify-svelte/simple-icons/github";
 	import { onMount } from "svelte";
 
+	const experiences = [
+		{
+			title: "Software Engineer Intern",
+			place: "IBM",
+			when: "Jan 2026 — Present",
+			description: "",
+		},
+		{
+			title: "AI Engineer",
+			place: "Undergraduate Artificial Intelligence Society",
+			when: "Oct 2025 — Jan 2026",
+			description: "",
+		},
+		{
+			title: "Full Stack Developer",
+			place: "UofA Blueprint Chapter",
+			when: "Oct 2025 — Jan 2026",
+			description: "",
+		},
+	];
+
 	const projects = [
 		{
-			name: "Server Agent Threat Detection (SATD)",
+			name: "SATD",
 			description:
-				"Distributed threat detection with Go agents and dashboard.",
+				"Distributed threat detection with agents + analysis server",
 			link: "https://github.com/fr4nsyz/SATD",
 			demo: "/assets/SATD.mp4",
 		},
 		{
-			name: "Multithreaded Encrypted File Server/Client",
-			description: "Threaded file storage server & client.",
+			name: "MEFSC",
+			description: "Multithreaded encrypted file server and client",
 			link: "https://github.com/fr4nsyz/MEFSC",
 			demo: "/assets/MEFSC.mp4",
 		},
 		{
-			name: "Speech-Driven AI Video Preprocessor",
-			description: "AI-assisted cutting & preprocessing.",
+			name: "Keep It Rolling",
+			description: "Speech-driven AI video preprocessing pipeline",
 			link: "https://github.com/fr4nsyz/KeepItRolling",
 			demo: "/assets/KeepItRolling.mp4",
 		},
 		{
-			name: "HTTP Load Balancer",
-			description: "Simple RR load balancer.",
+			name: "Load Balancer",
+			description: "Round-robin HTTP load balancer",
 			link: "https://github.com/fr4nsyz/LoadBalancer",
 			demo: "/assets/LoadBalancer.mp4",
 		},
 		{
-			name: "Encrypted Steganography Suite",
-			description: "GUI tool to hide encrypted messages.",
+			name: "Steganography Suite",
+			description: "GUI tool for encrypted steganographic messaging",
 			link: "https://github.com/fr4nsyz/Steganography_Suite",
 			demo: "/assets/SteganographySuite.mp4",
 		},
 		{
-			name: "DNS Data Exfiltration Detector",
-			description: "ML model to detect DNS tunneling.",
+			name: "DNS Exfiltration Detector",
+			description: "ML-based detector for DNS tunneling",
 			link: "https://github.com/fr4nsyz/DNS_Tunneling",
 			demo: "/assets/DNS_Tunneling.mp4",
 		},
 		{
 			name: "Network Encryption Interface",
-			description: "C++ systems programming encryption interface.",
+			description:
+				"C++ systems-level network encryption interface (with libsodium)",
 			link: "https://github.com/fr4nsyz/Network-Encryption-Interface",
 			demo: "/assets/NetworkEncInterface.mp4",
 		},
 	];
 
 	let videos = [];
+	let waving_hand = "/";
+
+	setInterval(() => {
+		waving_hand = waving_hand === "/" ? "l" : "/";
+	}, 600);
 
 	onMount(() => {
+		const btn = document.getElementById("menu-btn");
+		const menu = document.getElementById("mobile-menu");
+
+		btn.addEventListener("click", () => {
+			menu.classList.toggle("hidden");
+		});
 		const canvas = document.getElementById("board");
-
-		console.log(canvas);
-
 		const ctx = canvas.getContext("2d");
 
 		const stars = [];
@@ -66,7 +94,6 @@
 		function spawnStar() {
 			const speed = Math.random() * 4;
 			const angle = Math.PI * (Math.random() * 0.25 - 0.125);
-
 			return {
 				x: Math.random() * canvas.width,
 				y: Math.random() * canvas.height,
@@ -76,17 +103,18 @@
 			};
 		}
 
-		for (let i = 0; i < STAR_COUNT; i++) {
-			stars.push(spawnStar());
-		}
-
-		function draw() {
+		function resize() {
 			canvas.width = window.innerWidth;
 			canvas.height = window.innerHeight;
-			const t = performance.now() * 0.001;
+		}
 
-			const hue1 = 180 + Math.sin(t) * 40;
-			const hue2 = 200 + Math.sin(t + Math.PI / 2) * 40;
+		resize();
+		window.addEventListener("resize", resize);
+
+		for (let i = 0; i < STAR_COUNT; i++) stars.push(spawnStar());
+
+		function update() {
+			const t = performance.now() * 0.001;
 
 			const grd = ctx.createLinearGradient(
 				0,
@@ -94,8 +122,12 @@
 				canvas.width,
 				canvas.height,
 			);
-			grd.addColorStop(0, `hsl(${hue1}, 90%, 60%)`);
-			grd.addColorStop(1, `hsl(${hue2}, 90%, 20%)`);
+
+			grd.addColorStop(0, `hsl(${180 + Math.sin(t) * 40}, 90%, 10%)`);
+			grd.addColorStop(
+				1,
+				`hsl(${200 + Math.sin(t + Math.PI / 2) * 40}, 90%, 20%)`,
+			);
 
 			ctx.fillStyle = grd;
 			ctx.fillRect(0, 0, canvas.width, canvas.height);
@@ -106,8 +138,7 @@
 
 			for (let s of stars) {
 				ctx.beginPath();
-				ctx.strokeStyle = `rgba(0, 255, 255, ${s.life})`;
-
+				ctx.strokeStyle = `rgba(0,255,255,${s.life})`;
 				ctx.moveTo(s.x, s.y);
 				ctx.lineTo(s.x - s.vx * 6, s.y - s.vy * 6);
 				ctx.stroke();
@@ -116,78 +147,136 @@
 				s.y += s.vy;
 				s.life -= 0.01;
 
-				if (s.life <= 0 || s.x > canvas.width || s.y > canvas.height) {
+				if (
+					s.life <= 0 ||
+					s.x < 0 ||
+					s.y < 0 ||
+					s.x > canvas.width ||
+					s.y > canvas.height
+				) {
 					Object.assign(s, spawnStar());
 				}
 			}
-
-			requestAnimationFrame(draw);
 		}
 
-		draw();
+		function run() {
+			update();
+			requestAnimationFrame(run);
+		}
+
+		run();
 
 		const obs = new IntersectionObserver((entries) => {
 			entries.forEach((e) => {
 				const v = e.target;
-				if (e.isIntersecting) v.play();
-				else v.pause();
+				e.isIntersecting ? v.play() : v.pause();
 			});
 		});
 
 		videos.forEach((v) => v && obs.observe(v));
 	});
-
-	let waving_hand = "/";
-
-	setInterval(() => {
-		if (waving_hand === "/") {
-			waving_hand = "l";
-		} else {
-			waving_hand = "/";
-		}
-	}, 500);
 </script>
 
-<canvas id="board" style="z-index: -10; position: fixed;"></canvas>
-<!-- NAVBAR -->
-<nav class="text-white p-4 font-mono">
-	<div class="max-w-6xl mx-auto flex justify-between items-center">
-		<a href="/" class="text-white font-semibold text-lg"
-			>Francois Coleongco</a
-		>
-		<div>
-			<a href="#projects" class="text-white hover:text-gray-300 mr-6"
-				>Projects</a
-			>
-			<a href="#contact" class="text-white hover:text-gray-300">Contact</a
-			>
+<canvas id="board" class="fixed inset-0 -z-10"></canvas>
+
+<!-- NAV -->
+<nav class="max-w-6xl mx-auto px-6 py-6 text-sm font-mono text-gray-400">
+	<div class="flex justify-between items-center">
+		<span>francois@local</span>
+
+		<!-- Desktop links -->
+		<div class="hidden sm:flex space-x-6">
+			<a href="#experience" class="hover:text-cyan-400">experience</a>
+			<a href="#projects" class="hover:text-cyan-400">projects</a>
+			<a href="#contact" class="hover:text-cyan-400">contact</a>
 		</div>
+
+		<!-- Hamburger button -->
+		<button
+			id="menu-btn"
+			class="sm:hidden focus:outline-none"
+			aria-label="Toggle menu"
+		>
+			<svg
+				class="w-6 h-6"
+				fill="none"
+				stroke="currentColor"
+				stroke-width="2"
+				viewBox="0 0 24 24"
+			>
+				<path
+					stroke-linecap="round"
+					stroke-linejoin="round"
+					d="M4 6h16M4 12h16M4 18h16"
+				/>
+			</svg>
+		</button>
+	</div>
+
+	<!-- Mobile menu -->
+	<div id="mobile-menu" class="hidden flex-col mt-4 space-y-4 sm:hidden">
+		<a href="#experience" class="hover:text-cyan-400">experience</a>
+		<a href="#projects" class="hover:text-cyan-400">projects</a>
+		<a href="#contact" class="hover:text-cyan-400">contact</a>
 	</div>
 </nav>
 
 <!-- HERO -->
-<section class="max-w-3xl mx-auto p-8 text-center text-white">
-	<h1 class="text-4xl font-semibold">Hi o{waving_hand}</h1>
-	<p class="text-gray-300 mt-4">
-		I'm a Honors CS major at the University of Alberta, focusing on systems
-		programming and cybersecurity.
+<section class="max-w-3xl mx-auto px-6 py-24 font-mono text-gray-200">
+	<h1 class="text-3xl mb-4">
+		hi o{waving_hand}
+	</h1>
+
+	<p class="text-gray-400 leading-relaxed">
+		swe @ IBM<br />
+		honors cs @ university of alberta<br />
+		systems programming • cybersecurity
+	</p>
+
+	<p class="text-xs text-gray-500 mt-4">
+		rust | c/c++ | go | linux | networking
 	</p>
 </section>
 
-<!-- PROJECTS -->
-<section id="projects" class="max-w-6xl mx-auto p-8 text-white">
-	<h2 class="text-2xl text-center mb-8 font-semibold">Projects</h2>
+<section class="max-w-3xl mx-auto px-6 py-12 font-mono" id="experience">
+	<h2 class="text-sm uppercase tracking-widest text-gray-500 mb-6">
+		experience
+	</h2>
 
-	<div class="grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
+	{#each experiences as e, i}
+		<div class="space-y-6 text-sm">
+			<div class="border-l border-gray-700 pl-4">
+				<div class="flex justify-between flex-wrap gap-2">
+					<span class="text-gray-200">
+						{e.title}
+					</span>
+					<span class="text-gray-500">{e.when}</span>
+				</div>
+
+				<p class="text-gray-400 mt-1">{e.place}</p>
+
+				<p>{e.description}</p>
+			</div>
+		</div>
+		<br />
+	{/each}
+</section>
+
+<!-- PROJECTS -->
+<section id="projects" class="max-w-6xl mx-auto px-6 py-16 font-mono">
+	<h2 class="text-sm uppercase tracking-widest text-gray-500 mb-8">
+		selected builds
+	</h2>
+
+	<div class="grid gap-8 sm:grid-cols-2 lg:grid-cols-2">
 		{#each projects as p, i}
 			<div
-				class="group opacity-80 bg-gray-900 p-6 rounded-xl shadow-xl transition duration-300 border-2 border-transparent hover:border-indigo-500"
+				class="bg-black/60 border border-gray-800 rounded-lg p-5
+				       hover:border-cyan-400 transition"
 			>
 				<a href={p.link} target="_blank" class="block">
-					<h3 class="text-xl font-semibold text-white mb-2">
-						{p.name}
-					</h3>
-					<p class="text-gray-400 text-sm mb-4">{p.description}</p>
+					<h3 class="text-gray-200 mb-2">{p.name}</h3>
+					<p class="text-sm text-gray-400 mb-4">{p.description}</p>
 
 					{#if p.demo}
 						<video
@@ -196,21 +285,14 @@
 							muted
 							loop
 							playsinline
-							class="w-full rounded-md border border-gray-700"
+							class="rounded border border-gray-800"
 						/>
 					{/if}
 				</a>
 
-				<div class="mt-4 flex items-center gap-2 text-sm text-gray-400">
-					<a href={p.link} target="_blank">
-						<Github
-							height="20"
-							class="text-gray-400 hover:text-white"
-						/>
-					</a>
-					<a href={p.link} target="_blank" class="truncate">
-						{p.link.slice(19)}
-					</a>
+				<div class="mt-4 flex items-center gap-2 text-xs text-gray-500">
+					<Github height="16" />
+					<span class="truncate">{p.link.slice(19)}</span>
 				</div>
 			</div>
 		{/each}
@@ -218,32 +300,29 @@
 </section>
 
 <!-- CONTACT -->
-<section id="contact" class="max-w-3xl mx-auto p-8 text-center text-white">
-	<h2 class="text-2xl mb-6 font-semibold">Contact</h2>
+<section id="contact" class="max-w-3xl mx-auto px-6 py-24 font-mono">
+	<h2 class="text-sm uppercase tracking-widest text-gray-500 mb-6">
+		reach me
+	</h2>
 
-	<div class="flex justify-center gap-4">
+	<div class="flex gap-6 text-sm">
 		<a
 			href="mailto:francois.coleongco@gmail.com"
-			class="bg-gray-800 text-cyan-400 py-2 px-6 rounded-lg
-			   border-2 border-transparent transition-all duration-300
-			   hover:border-cyan-400 hover:-translate-y-0.5 hover:shadow-lg"
+			class="text-cyan-400 hover:underline"
 		>
-			Email Me
+			email
 		</a>
 
 		<a
 			href="https://linkedin.com/in/francois-coleongco"
 			target="_blank"
-			class="bg-gray-800 text-cyan-400 py-2 px-6 rounded-lg
-			   border-2 border-transparent transition-all duration-300
-			   hover:border-cyan-400 hover:-translate-y-0.5 hover:shadow-lg"
+			class="text-cyan-400 hover:underline"
 		>
-			LinkedIn
+			linkedin
 		</a>
 	</div>
 </section>
 
-<!-- FOOTER -->
-<footer class="text-center text-gray-500 py-4">
-	© 2025 Francois Coleongco
+<footer class="text-center text-xs text-gray-600 py-6 font-mono">
+	© 2025
 </footer>
