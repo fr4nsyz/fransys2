@@ -324,5 +324,5 @@
 </section>
 
 <footer class="text-center text-xs text-gray-600 py-6 font-mono">
-	© 2025
+	© 2025 Francois Coleongco
 </footer>
