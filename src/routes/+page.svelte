@@ -38,6 +38,14 @@
 			link: "https://github.com/fr4nsyz/MEFSC",
 			demo: "/assets/MEFSC.mp4",
 		},
+
+		{
+			name: "2Congested",
+			description: "A congestion controlled UDP-based network protocol",
+			link: "https://github.com/fr4nsyz/2Congested",
+			demo: "/assets/2Congested.mp4",
+		},
+
 		{
 			name: "Keep It Rolling",
 			description: "Speech-driven AI video preprocessing pipeline",
@@ -228,13 +236,13 @@
 	</h1>
 
 	<p class="text-gray-400 leading-relaxed">
-		swe @ IBM<br />
-		honors cs @ university of alberta<br />
-		systems programming • cybersecurity
+		SWE Intern @ IBM<br />
+		Honors cs @ university of alberta<br />
+		Systems programming + cybersecurity
 	</p>
 
 	<p class="text-xs text-gray-500 mt-4">
-		rust | c/c++ | go | linux | networking
+		[ 'rust', 'c/c++', golang, linux, networks ]
 	</p>
 </section>
 
