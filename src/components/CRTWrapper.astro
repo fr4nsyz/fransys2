@@ -1,0 +1,132 @@
+---
+interface Props {
+  class?: string;
+}
+
+const { class: className = '' } = Astro.props;
+---
+
+<div class="crt-container {className}">
+  <div class="crt-screen">
+    <div class="crt-content">
+      <slot />  <!-- Your page content goes here -->
+    </div>
+
+    <!-- Overlays -->
+    <div class="scanlines"></div>
+    <div class="vignette"></div>
+    <div class="glow-overlay"></div>
+  </div>
+</div>
+
+<style>
+  .crt-container {
+    position: relative;
+    width: 100%;
+    min-height: 100vh;
+    background: #0a0a0a;
+    overflow: hidden;
+    font-family: 'Courier New', Courier, monospace; /* or your retro font */
+  }
+
+  .crt-screen {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    background: #0f0f23;          /* dark greenish phosphor bg */
+    box-shadow: 
+      inset 0 0 100px rgba(0,0,0,0.8),
+      0 0 60px rgba(0, 255, 100, 0.15);
+    border: 4px solid #111;
+    border-radius: 8px;           /* slight rounding or keep sharp */
+    overflow: hidden;
+  }
+
+  .crt-content {
+    position: relative;
+    z-index: 5;
+    padding: 2rem;
+    color: #00ff41;               /* classic green or #e0ffe0 */
+    text-shadow: 
+      0 0 4px #00ff41,
+      0 0 8px #00ff41,
+      0 0 12px rgba(0,255,65,0.6);
+    /* Optional subtle animation for "breathing" glow */
+    animation: phosphor-glow 4s ease-in-out infinite alternate;
+  }
+
+  /* Scanlines – most important retro feel */
+  .scanlines {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    background: repeating-linear-gradient(
+      to bottom,
+      transparent 0%,
+      rgba(0,0,0,0.08) 50%,
+      transparent 50%,
+      transparent 100%
+    );
+    background-size: 100% 4px;      /* 2–6px for density */
+    z-index: 10;
+    animation: scan-roll 4s linear infinite;
+  }
+
+  /* Optional rolling scanline (like old TVs) */
+  @keyframes scan-roll {
+    0%   { transform: translateY(-100%); }
+    100% { transform: translateY(100%);  }
+  }
+
+  /* Edge vignette + subtle curvature illusion */
+  .vignette {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    box-shadow: inset 0 0 120px rgba(0,0,0,0.9);
+    z-index: 8;
+  }
+
+  /* Extra phosphor bloom layer */
+  .glow-overlay {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    background: radial-gradient(
+      circle at 50% 50%,
+      rgba(0, 255, 80, 0.08) 0%,
+      transparent 70%
+    );
+    mix-blend-mode: screen;
+    z-index: 6;
+  }
+
+  /* Optional very subtle flicker */
+  .crt-screen::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: rgba(255,255,255,0.02);
+    animation: flicker 0.4s infinite alternate;
+    pointer-events: none;
+    z-index: 7;
+  }
+
+  @keyframes flicker {
+    0%, 100% { opacity: 0.02; }
+    50%      { opacity: 0;    }
+  }
+
+  @keyframes phosphor-glow {
+    from { text-shadow: 0 0 4px #00ff41, 0 0 8px #00ff41; }
+    to   { text-shadow: 0 0 6px #00ff41, 0 0 14px #00ff41, 0 0 20px rgba(0,255,65,0.4); }
+  }
+
+
+  /* Reduce motion respect */
+  @media (prefers-reduced-motion: reduce) {
+    .scanlines, .crt-screen::after, .crt-content {
+      animation: none !important;
+    }
+  }
+</style>
