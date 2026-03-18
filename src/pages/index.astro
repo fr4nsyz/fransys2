@@ -1,0 +1,62 @@
+---
+import BaseHead from '../components/BaseHead.astro';
+import Footer from '../components/Footer.astro';
+import Header from '../components/Header.astro';
+import { SITE_DESCRIPTION, SITE_TITLE } from '../consts';
+---
+
+<!doctype html>
+<html lang="en">
+	<head>
+<meta name="color-scheme" content="light dark">
+		<BaseHead title={SITE_TITLE} description={SITE_DESCRIPTION} />
+	</head>
+	<body>
+		<Header />
+<main>
+	<h1>Welcome to my burrow</h1>
+
+	<img src="nuggie_&_thick_neck.jpg" alt="Nuggie and Thick Neck" class="about-photo">
+
+	<p>
+	Helloo I'm Francois (aka <strong>fr4nsyz</strong>), a computer science student based in Canada focused on
+	systems and security engineering.
+	</p>
+
+	<p>
+	Currently a <strong>Software Engineering Intern at IBM</strong>, where I work on
+	threat detection and response pipelines and security-related infrastructure.
+	</p>
+
+	<p>
+  I like working close to the machine, i.e. network programming, operating systems, and distributed
+	systems. Most of my projects revolve around building things that move data securely
+	and efficiently.
+	</p>
+
+	<p>
+  Technologies I frequently work with include <strong>Go, Rust, TypeScript, and C++</strong> when I'm feeling masochistic.
+	</p>
+
+	<p>Outside of coursework and actual work, I spend time building and experimenting with:</p>
+
+	<ul>
+		<li>encrypted file services</li>
+		<li>steganography tooling</li>
+		<li>threat detection pipelines</li>
+		<li>networking and protocol experiments</li>
+    <li>the occasional IoT hardware project</li>
+	</ul>
+
+	<p>
+	This site is where I keep notes, write about projects, and document things I learn along the way.
+	</p>
+
+	<p>
+	If you're interested in collaborating or just want to talk about systems or security,
+	feel free to reach out!
+	</p>
+</main>
+		<Footer />
+	</body>
+</html>
