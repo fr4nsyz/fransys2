@@ -1,0 +1,134 @@
+---
+--- 
+<style>
+.eye {
+  position: absolute;
+  width: 4px;
+  height: 4px;
+  background: black;
+  border-radius: 50%;
+  top: 5px;
+}
+
+.eye-left { top: 2px; }
+.eye-right { top: 10px; }
+#lizard {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 60px;
+  height: 40px;
+  pointer-events: none;
+  z-index: 9999;
+  transform-origin: center; /* <-- head is origin */
+}
+
+/* body */
+.body {
+  position: absolute;
+  width: 40px;
+  height: 20px;
+  background: #4caf50;
+  border-radius: 20px;
+  top: 10px;
+  left: 10px;
+}
+
+/* head */
+.head {
+  position: absolute;
+  width: 18px;
+  height: 18px;
+  background: #66bb6a;
+  border-radius: 50%;
+  top: 11px;
+  left: 0;
+}
+
+/* tail */
+.tail {
+  position: absolute;
+  width: 30px;
+  height: 6px;
+  background: #388e3c;
+  border-radius: 10px;
+  top: 17px;
+  right: -20px;
+  transform-origin: left center;
+  animation: wag 0.4s infinite alternate;
+}
+
+/* legs */
+.leg {
+  position: absolute;
+  width: 6px;
+  height: 10px;
+  background: #2e7d32;
+  border-radius: 3px;
+  animation: walk 0.3s infinite alternate;
+}
+
+.leg1 { top: 5px; left: 12px; }
+.leg2 { top: 25px; left: 12px; }
+.leg3 { top: 5px; left: 30px; }
+.leg4 { top: 25px; left: 30px; }
+
+/* animations */
+@keyframes walk {
+  from { transform: rotate(20deg); }
+  to { transform: rotate(-20deg); }
+}
+
+@keyframes wag {
+  from { transform: rotate(10deg); }
+  to { transform: rotate(-10deg); }
+}
+</style>
+
+<div id="lizard">
+  <div class="lizard-rot">
+    <div class="body"></div>
+    <div class="head">
+      <div class="eye eye-left"></div>
+      <div class="eye eye-right"></div>
+    </div>
+  </div>
+  <div class="tail"></div>
+  <div class="leg leg1"></div>
+  <div class="leg leg2"></div>
+  <div class="leg leg3"></div>
+  <div class="leg leg4"></div>
+</div>
+
+<script is:inline>
+let mouse = { x: 0, y: 0 };
+let pos = { x: 200, y: 200 };
+const speed = 0.08;
+
+window.addEventListener("mousemove", (e) => {
+  mouse.x = e.clientX;
+  mouse.y = e.clientY;
+});
+
+function loop() {
+  const lizard = document.getElementById("lizard");
+  if (!lizard) return;
+
+  pos.x += (mouse.x - pos.x) * speed;
+  pos.y += (mouse.y - pos.y) * speed;
+
+  const dx = mouse.x - pos.x;
+  const dy = mouse.y - pos.y;
+  const angle = Math.atan2(dy, dx);
+
+  lizard.style.transform = `
+    translate(${pos.x}px, ${pos.y}px)
+    translate(-50%, -50%)
+    rotate(${angle + Math.PI}rad)
+  `;
+
+  requestAnimationFrame(loop);
+}
+
+loop();
+</script>
