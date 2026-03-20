@@ -7,7 +7,6 @@ import FormattedDate from '../../components/FormattedDate.astro';
 import Header from '../../components/Header.astro';
 import { SITE_DESCRIPTION, SITE_TITLE } from '../../consts';
 import Lizard from '../../components/Lizard.astro'
-import CRTWrapper from '../../components/CRTWrapper.astro';
 
 const posts = (await getCollection('blog')).sort(
 	(a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf(),
@@ -89,7 +88,6 @@ const posts = (await getCollection('blog')).sort(
 		</style>
 	</head>
 	<body>
-    <CRTWrapper>
 		<Header />
 		<main>
 			<section>
@@ -115,6 +113,5 @@ const posts = (await getCollection('blog')).sort(
 		<Footer />
 
 <Lizard />
-    </CRTWrapper>
 	</body>
 </html>

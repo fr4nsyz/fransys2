@@ -4,7 +4,6 @@ import Footer from '../components/Footer.astro';
 import Header from '../components/Header.astro';
 import { SITE_DESCRIPTION, SITE_TITLE } from '../consts';
 import Lizard from '../components/Lizard.astro'
-import CRTWrapper from '../components/CRTWrapper.astro';
 ---
 
 <!doctype html>
@@ -14,7 +13,6 @@ import CRTWrapper from '../components/CRTWrapper.astro';
 		<BaseHead title={SITE_TITLE} description={SITE_DESCRIPTION} />
 	</head>
 	<body>
-<CRTWrapper>
 		<Header />
 <main>
 	<h1>Welcome 2 my burrow</h1>
@@ -63,5 +61,4 @@ import CRTWrapper from '../components/CRTWrapper.astro';
 		<Footer />
 <Lizard />
 	</body>
-</CRTWrapper>
 </html>
