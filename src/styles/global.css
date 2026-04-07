@@ -200,7 +200,6 @@ hr {
 }
 @media (prefers-color-scheme: dark) {
 	nav {
-		background: rgb(15, 18, 25);
 	}
 
 	nav a {

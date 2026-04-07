@@ -1,0 +1,138 @@
+<canvas id="bg-canvas" aria-hidden="true"></canvas>
+
+<style is:global>
+	#bg-canvas {
+		position: fixed;
+		inset: 0;
+		width: 100%;
+		height: 100%;
+		z-index: -10;
+		pointer-events: none;
+	}
+
+	body {
+		background: transparent !important;
+		--accent: #7c8cff;
+		--accent-dark: #aab4ff;
+		--black: 230, 233, 240;
+		--gray: 148, 163, 184;
+		--gray-light: 30, 41, 59;
+		--gray-dark: 226, 232, 240;
+		color: rgb(var(--gray-dark));
+	}
+
+	header {
+		background: rgba(10, 12, 20, 0.25);
+		backdrop-filter: blur(8px);
+		-webkit-backdrop-filter: blur(8px);
+	}
+
+	nav a {
+		color: rgb(var(--black)) !important;
+	}
+
+	h1, h2, h3, h4, h5, h6 {
+		color: rgb(var(--black));
+	}
+
+	code {
+		background-color: rgb(var(--gray-light));
+	}
+
+</style>
+
+<script>
+	const canvas = document.getElementById('bg-canvas') as HTMLCanvasElement;
+	const ctx = canvas.getContext('2d', { alpha: false })!;
+
+	const STAR_COUNT = 60;
+	const stars: { x: number; y: number; vx: number; vy: number; life: number }[] = [];
+
+	// Logical dimensions — kept in sync with resize, used everywhere
+	let W = window.innerWidth;
+	let H = window.innerHeight;
+
+	function spawnStar() {
+		const speed = Math.random() * 1.2;
+		const angle = Math.PI * (Math.random() * 0.25 - 0.125);
+		return { x: Math.random() * W, y: Math.random() * H,
+		         vx: Math.cos(angle) * speed, vy: Math.sin(angle) * speed, life: 1 };
+	}
+
+	// Cached gradient — only recreated when the hue would visibly change
+	let cachedGrd: CanvasGradient | null = null;
+	let lastHue0 = -999;
+
+	function resize() {
+		const dpr = Math.min(window.devicePixelRatio || 1, 2);
+		W = window.innerWidth;
+		H = window.innerHeight;
+		canvas.width  = W * dpr;
+		canvas.height = H * dpr;
+		canvas.style.width  = W + 'px';
+		canvas.style.height = H + 'px';
+		ctx.setTransform(dpr, 0, 0, dpr, 0, 0); // avoids accumulating scale on repeated resizes
+		cachedGrd = null; // invalidate so it rebuilds at correct size
+	}
+
+	resize();
+	window.addEventListener('resize', resize, { passive: true });
+
+	for (let i = 0; i < STAR_COUNT; i++) stars.push(spawnStar());
+
+	const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+	let paused = false;
+	document.addEventListener('visibilitychange', () => { paused = document.hidden; });
+
+	function update() {
+		const t = performance.now() * 0.001;
+
+		// Recreate gradient only when hue shifts by ≥1° (saves ~60 allocations/s)
+		const hue0 = 180 + Math.sin(t) * 40;
+		if (!cachedGrd || Math.abs(hue0 - lastHue0) >= 1) {
+			cachedGrd = ctx.createLinearGradient(0, 0, W, H);
+			cachedGrd.addColorStop(0, `hsl(${hue0}, 90%, 10%)`);
+			cachedGrd.addColorStop(1, `hsl(${200 + Math.sin(t + Math.PI / 2) * 40}, 90%, 20%)`);
+			lastHue0 = hue0;
+		}
+		ctx.fillStyle = cachedGrd;
+		ctx.fillRect(0, 0, W, H);
+
+		if (prefersReduced) return;
+
+		// Glow pass — single batched path, no shadowBlur needed
+		ctx.lineWidth = 5;
+		ctx.strokeStyle = 'rgba(0,255,255,0.06)';
+		ctx.beginPath();
+		for (const s of stars) {
+			ctx.moveTo(s.x, s.y);
+			ctx.lineTo(s.x - s.vx * 10, s.y - s.vy * 10);
+		}
+		ctx.stroke();
+
+		// Core pass — thin bright line per star (life drives alpha)
+		ctx.lineWidth = 1.5;
+		for (const s of stars) {
+			ctx.strokeStyle = `rgba(0,255,255,${s.life.toFixed(2)})`;
+			ctx.beginPath();
+			ctx.moveTo(s.x, s.y);
+			ctx.lineTo(s.x - s.vx * 10, s.y - s.vy * 10);
+			ctx.stroke();
+
+			s.x += s.vx;
+			s.y += s.vy;
+			s.life -= 0.004;
+
+			if (s.life <= 0 || s.x < 0 || s.y < 0 || s.x > W || s.y > H) {
+				Object.assign(s, spawnStar());
+			}
+		}
+	}
+
+	function run() {
+		if (!paused) update();
+		requestAnimationFrame(run);
+	}
+
+	run();
+</script>

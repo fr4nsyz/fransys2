@@ -1,5 +1,6 @@
 ---
 import BaseHead from '../../components/BaseHead.astro';
+import CanvasBackground from '../../components/CanvasBackground.astro';
 import Footer from '../../components/Footer.astro';
 import Header from '../../components/Header.astro';
 import { SITE_DESCRIPTION, SITE_TITLE } from '../../consts';
@@ -99,6 +100,7 @@ const projects = repos.filter((r) => !r.message);
 		</style>
 	</head>
 	<body>
+		<CanvasBackground />
 		<Header />
 		<main>
 			<section>
