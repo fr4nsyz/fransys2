@@ -3,26 +3,20 @@ import BaseHead from '../../components/BaseHead.astro';
 import CanvasBackground from '../../components/CanvasBackground.astro';
 import Footer from '../../components/Footer.astro';
 import Header from '../../components/Header.astro';
-import { SITE_DESCRIPTION, SITE_TITLE } from '../../consts';
+import { SITE_DESCRIPTION, SITE_TITLE, PROJECT_REPOS } from '../../consts';
 import Lizard from '../../components/Lizard.astro';
 
-const pinnedRepos = [
-  'KernelHarbor',
-  'LoadBalancer',
-  'datascale',
-  'MEFSC',
-  'DNS_Tunneling',
-  'Steganography_Suite',
-];
-
 const repos = await Promise.all(
-  pinnedRepos.map(async (repo) => {
-    const res = await fetch(`https://api.github.com/repos/fr4nsyz/${repo}`);
+  PROJECT_REPOS.map(async (url) => {
+    const match = url.match(/github\.com\/([^/]+)\/([^/]+)/);
+    if (!match) return null;
+    const [, owner, repo] = match;
+    const res = await fetch(`https://api.github.com/repos/${owner}/${repo}`);
     return res.json();
   })
 );
 
-const projects = repos.filter((r) => !r.message);
+const projects = repos.filter((r) => r && !r.message);
 ---
 
 <!doctype html>
